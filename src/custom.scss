@@ -1,0 +1,62 @@
+// Override default variables before the import
+// $body-bg: #000;
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
+
+html {
+  position: relative;
+  min-height: 100vh;
+  font-size: 16px;
+}
+
+body {
+  height: 100%;
+  margin-bottom: 60px;
+  background: linear-gradient(to bottom, #8e9eab, #eef2f3);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+body > .container {
+  padding-top: 60px;
+}
+
+.main {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid whitesmoke;
+}
+
+input[type='text'] {
+  font-size: 1.25rem;
+  height: 3rem;
+}
+
+input[type='text']:focus {
+  border-color: gray;
+}
+
+label {
+  color: white;
+}
+
+.card {
+  background: whitesmoke;
+}
+
+.card {
+  transition: border-color ease-in-out 150ms;
+}
+
+.card:hover {
+  border: 1px solid gray;
+}
+
+.btn-link {
+  transition: all 200ms ease-in-out;
+}
+
+.btn-link:hover {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+}
