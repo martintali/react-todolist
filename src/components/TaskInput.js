@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
 
 class TaskInput extends Component {
+  state = { title: '' };
+
+  onInputChange = (e) => {
+    this.setState({ title: e.target.value });
+  };
+
+  onFormSubmit = (e) => {
+    e.preventDefault();
+    this.props.onFormSubmit(this.state.title);
+    this.setState({ title: '' });
+  };
+
   render() {
     return (
-      <form className="form-group mb-5">
-        <input
-          type="text"
-          id="input"
-          className="form-control mb-2"
-          placeholder="What do you want to do?"
-        />
-        <label htmlFor="#input">
-          <em>
-            Press <code>Return</code> to save
-          </em>
-        </label>
+      <form onSubmit={this.onFormSubmit}>
+        <div className="form-group">
+          <input
+            type="text"
+            id="input"
+            value={this.state.title}
+            onChange={this.onInputChange}
+            className="form-control form-control-lg"
+            placeholder="What do you want to do?"
+          />
+        </div>
       </form>
     );
   }

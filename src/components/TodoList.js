@@ -1,52 +1,76 @@
 import React from 'react';
+import TodoItem from './TodoItem';
 
-const TodoList = () => {
-  return (
-    <div className="cards">
-      <div className="card">
-        <div className="card-block">
-          <button id="delete" type="button" className="btn btn-link float-right">
-            <svg
-              className="bi bi-x text-danger"
-              width="1.3em"
-              height="1.3em"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z"
-                clipRule="evenodd"
-              />
-              <path
-                fillRule="evenodd"
-                d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <button id="done" type="button" className="btn btn-link float-right mr-3">
-            <svg
-              className="bi bi-check text-success"
-              width="1.3em"
-              height="1.3em"
-              viewBox="0 0 16 16"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-          <p className="card-title lead">Learn React</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+class TodoList extends React.Component {
+  state = { todos: [] };
+
+  onTodoDeleted = (id) => {
+    this.setState(
+      (prevState) => ({
+        todos: prevState.todos.filter((todo) => {
+          return todo.id !== id;
+        }),
+      }),
+      () => {
+        localStorage.setItem('todoList', JSON.stringify(this.state.todos));
+      }
+    );
+  };
+
+  onTodoCompleted = (idx) => {
+    let todos = [...this.state.todos];
+    let todo = {
+      ...todos[idx],
+      isCompleted: !todos[idx].isCompleted,
+    };
+    todos[idx] = todo;
+
+    this.setState({ todos }, () =>
+      localStorage.setItem('todoList', JSON.stringify(this.state.todos))
+    );
+  };
+
+  addTodo = (title) => {
+    this.setState(
+      (prevState) => ({
+        todos: [
+          ...prevState.todos,
+          {
+            title,
+            isCompleted: false,
+            id: Math.floor((1 + Math.random()) * 0x10000)
+              .toString(16)
+              .substring(1),
+          },
+        ],
+      }),
+      () => {
+        localStorage.setItem('todoList', JSON.stringify(this.state.todos));
+      }
+    );
+  };
+
+  componentDidMount() {
+    const todosLs = localStorage.getItem('todoList');
+    if (todosLs) {
+      this.setState({ todos: JSON.parse(todosLs) });
+    }
+  }
+
+  render() {
+    return (
+      <ul className="list-group list-group-flush">
+        {this.state.todos.map((todo) => (
+          <TodoItem
+            todo={todo}
+            key={todo.id}
+            onDelete={this.onTodoDeleted}
+            onCompleted={this.onTodoCompleted}
+          />
+        ))}
+      </ul>
+    );
+  }
+}
 
 export default TodoList;
